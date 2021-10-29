@@ -1,0 +1,23 @@
+.DS_Store
+.pyc
+__pycache__
+__pycache__/*
+
+# static folder (css, js, etc) local
+static
+static/*
+
+# vscode settings
+.vscode/*
+
+# media folder (uploaded file by user) local
+media
+media/*
+upload
+upload/*
+
+#src folder
+src/
+
+# log
+logs/*
