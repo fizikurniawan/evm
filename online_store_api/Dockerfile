@@ -11,4 +11,9 @@ RUN pip install -r requirements.txt
 EXPOSE 8000
 
 RUN chmod +x entrypoint.sh
+
+RUN mkdir -p logs
+RUN touch logs/flash_sale.log
+RUN touch logs/online_store.log
+
 ENTRYPOINT ["./entrypoint.sh"]

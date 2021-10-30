@@ -1,6 +1,6 @@
 # Installation Guide
 ## Without Docker
-1. Install Python3.8 or higher
+1. Install Python3.8
 2. Install PostgreSQL 12
 3. Clone Repository
 4. Create Virtual Environtment
@@ -30,7 +30,7 @@
 	``` 
 10. Open `http://localhost:8000/docs` to show api documentation
 
-## With Dokcer
+## With Dokcer Compose
 
 1. Adjust value like database settings etc at file `.env`. Example value is put on `.env.example`. You can copy and modify it
     ```bash
@@ -41,10 +41,22 @@
     docker-compose up
     ```
 
-##
+## Running Test
 
-## Demo
-1. http://<demo-ip>:8000/swagger/
+Before running test, make sure application has already up. 
+
+1. Local Server
+ ```bash
+    export BASE_URL=http://localhost:8000 && python tests/flash_sale.py
+ ```
+
+2. Demo Server
+```bash
+    export BASE_URL=http://139.162.7.12:8000 && python tests/flash_sale.py
+```
+
+## Demo API
+1. http://139.162.7.12:8000/swagger/
 
 
 ## Analysis
