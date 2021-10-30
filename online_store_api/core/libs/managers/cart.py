@@ -20,7 +20,10 @@ class CartManager:
         customer = data.get("customer")
         qty = data.get("qty")
 
-        # check cart with same costumer and product
+        """
+        Check cart, if product has already on cart, sum qty to current cart.
+        if product doesn't exists in cart. Create new record cart
+        """
         exists_cart = (
             self.get_queryset().filter(product=product, customer=customer).last()
         )

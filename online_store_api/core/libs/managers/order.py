@@ -13,9 +13,6 @@ class OrderManager:
     def get_queryset(self):
         return Order.objects.filter()
 
-    def get_ordered_product(self, product_id):
-        pass
-
     def generate_order_number(self, customer_id):
         random = str(uuid.uuid4())
         number = f"ODR-{random[-4:]}-CSTM{customer_id}"
@@ -28,7 +25,7 @@ class OrderManager:
         """
 
         # get cart by customer_id
-        with lock_db('lock_when_order'):
+        with lock_db("lock_when_order"):
             carts = self.cart_manager.get_cart_by_customer(customer_id)
             if not carts.exists():
                 raise Exception("Cart is empty")
@@ -52,7 +49,9 @@ class OrderManager:
                 # add product to order item
                 OrderItem.objects.create(product=product, qty=cart.qty, order=order)
 
-                # after create order item then remove product from cart and update qty product
+                """
+                After success add to OrderItem, update stock product and delete cart.
+                """
                 new_stock = product.stock - cart.qty
                 self.product_manager.update_product(product.id, {"stock": new_stock})
                 cart.delete()

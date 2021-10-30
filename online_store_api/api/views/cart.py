@@ -7,6 +7,23 @@ from ..serializers.cart import CartSerializer, CartWriteSerializer, CartRemoveSe
 
 
 class CartViewSet(GenericViewSet):
+    """
+    retrieve:
+        Get carts by customer_id.
+
+    Get carts by customer_id.
+
+    create:
+        Add product to cart.
+
+    Add product to cart.
+
+    remove_from_cart:
+        Remove prduct from customer's cart
+
+    Remove prduct from customer's cart
+    """
+
     lookup_field = "customer_id"
     cart_manager = CartManager()
 

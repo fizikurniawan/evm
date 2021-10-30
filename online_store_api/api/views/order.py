@@ -8,6 +8,13 @@ from ..serializers.order import OrderSerializer, OrderWriteSerializer
 
 
 class OrderViewSet(GenericViewSet):
+    """
+    create:
+        Order all product in customer's cart.
+
+    Order all product in customer's cart
+    """
+
     order_manager = OrderManager()
 
     def get_serializer_class(self):

@@ -18,6 +18,38 @@ class ProductViewSet(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
 ):
+    """
+    create:
+        Create Product.
+
+    Create Product
+
+    list:
+        List all product
+
+    List all product
+
+    retrieve:
+        Get detail product product_id
+
+    Get Detail Product
+
+    update:
+        Update/edit product by product_id
+
+    Update/edit product
+
+    destroy:
+        Delete product by product_id
+
+    Delete Product
+
+    get_total_product_ordered:
+        Get ptoduct has been ordered by customer
+
+    Get ptoduct has been ordered by customer
+    """
+
     lookup_field = "id"
     product_manager = ProductManager()
     queryset = product_manager.get_queryset()
@@ -37,11 +69,14 @@ class ProductViewSet(
         serializer.is_valid(raise_exception=True)
 
         validated_data = serializer.validated_data
+
+        # updating product
         self.product_manager.update_product(id, validated_data)
 
         return Response({"message": "Success update data", "data": validated_data})
 
     def destroy(self, request, id=None):
+        # validate id, if found, delete it
         self.product_manager.delete_product_or_404(id)
 
         return Response(
@@ -59,6 +94,6 @@ class ProductViewSet(
             {
                 "product_id": product_id,
                 "total": self.product_manager.get_ordered_product(product_id),
-                "current_stock": self.product_manager.get_by_id(product_id).stock
+                "current_stock": self.product_manager.get_by_id(product_id).stock,
             }
         )

@@ -6,6 +6,18 @@ from core.structures.store.models import Customer
 
 
 class CustomerViewSet(GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin):
+    """
+    list:
+        List all customer.
+
+    List all customer.
+
+    create:
+        Create Customer.
+
+    Create Customer.
+    """
+
     queryset = Customer.objects.filter()
 
     def get_serializer_class(self):

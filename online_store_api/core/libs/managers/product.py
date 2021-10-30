@@ -23,15 +23,22 @@ class ProductManager:
         instance = self.get_or_404(id)
         return instance.delete()
 
-    def is_product_available(self, id, stock):
-        instance = (
-            self.get_queryset().filter(id=id, stock__gte=stock)
-        )
+    def is_product_available(self, id, qty):
+        """
+        Check product is available. Stock must be <= qty/value to check
+        """
+        instance = self.get_queryset().filter(id=id, stock__gte=qty)
         if not instance.exists():
             return False
         return True
 
     def get_ordered_product(self, id):
-        return OrderItem.objects.filter(product_id=id).aggregate(models.Sum("qty"))[
-            "qty__sum"
-        ]
+        """
+        Get ordered product with ignoring order status (paid, pending etc)
+        """
+        return (
+            OrderItem.objects.filter(product_id=id).aggregate(models.Sum("qty"))[
+                "qty__sum"
+            ]
+            or 0
+        )

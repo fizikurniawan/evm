@@ -10,7 +10,9 @@ from ..structures.store.models import LockDB
 
 class lock_db(object):
     """
-    Use lock db as decorator for locking database
+    Use lock db as decorator or python with for locking database
+
+    https://www.geeksforgeeks.org/with-statement-in-python/
     """
 
     def __init__(self, lock_id):
@@ -18,16 +20,28 @@ class lock_db(object):
         self.lock = None
 
     def __call__(self, func):
+        """
+        this method should be run when object called
+        """
         return self.decorate_callable(func)
 
     def __enter__(self):
+        """
+        Enter the runtime context related to this object.
+        The with statement will bind this method’s return value to the target(s)
+        specified in the as clause of the statement, if any.
+        """
         self.start()
 
     def __exit__(self, *args):
         self.stop()
 
     def start(self):
-        # max lock 10 minutes 10 * 60
+        """
+        Before create locking, remove expired lock/mutex.
+        max expired locking is 600 seconds
+        """
+
         LockDB.objects.filter(
             creation_time__lte=timezone.now() - timedelta(seconds=600)
         ).delete()
