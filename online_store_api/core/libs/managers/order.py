@@ -3,7 +3,7 @@ import uuid
 from core.structures.store.models import Product, Order, Cart, OrderItem
 from core.libs.managers.cart import CartManager
 from core.libs.managers.product import ProductManager
-from django.db import transaction
+from core.libs.lock_db import lock_db
 
 
 class OrderManager:
@@ -24,13 +24,11 @@ class OrderManager:
 
     def add_order(self, customer_id):
         """
-        django have method "select_for_update" for locking database.
-        select_for_update combined with decorators transaction atomic to tell
-        database to lock object.
+        Lock object every thread
         """
 
         # get cart by customer_id
-        with transaction.atomic():
+        with lock_db('lock_when_order'):
             carts = self.cart_manager.get_cart_by_customer(customer_id)
             if not carts.exists():
                 raise Exception("Cart is empty")

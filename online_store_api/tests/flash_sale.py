@@ -3,8 +3,13 @@ import requests
 import threading
 import uuid
 import os
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
+
+print(f"Running Testing on: {BASE_URL}")
+
 
 CUSTOMER_WANT_TO_BUY = 15
 PRODUCT_TO_SELL = 20
@@ -17,7 +22,7 @@ TOTAL_ORDERED = PRODUCT_TO_SELL - LAST_STOCK
 
 # setup logging test
 logging.basicConfig(
-    filename="logs/flash_sale.log",
+    filename=str(BASE_DIR) + "/logs/flash_sale.log",
     filemode="w",
     format="%(name)s - %(levelname)s - %(message)s",
     level=logging.DEBUG,
@@ -25,7 +30,7 @@ logging.basicConfig(
 
 
 def action_order(customer_id, product_id):
-    for _buy_time in range(BUY_TIMES):
+    for _ in range(BUY_TIMES):
         url = BASE_URL + "/api/cart/"
         body = {
             "customer_id": customer_id,

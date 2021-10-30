@@ -55,4 +55,4 @@
 2. Based on your analysis, propose a solution that will prevent the incidents from occurring again
     - My solution is:
         1. Lock the resource exclusively until one process order finished, to ensure only one thread can access/edit the resource.
-            With mutex a way to ensure that only one thread is allowed inside that area, using that resource. In django has built-in method `select_for_update` to tell database to lock until transaction is completed.
+            With mutex a way to ensure that only one thread is allowed inside that area, using that resource.
