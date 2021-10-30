@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 
@@ -23,6 +25,7 @@ class OrderViewSet(GenericViewSet):
         try:
             self.order_manager.add_order(validated_data.get("customer_id"))
         except Exception as err:
-            return Response({"message": str(err)}, status=422)
+            logging.warning(str(err))
+            return Response({"message": "Failed to add order"}, status=422)
 
         return Response({"message": "Success add cart to order"})

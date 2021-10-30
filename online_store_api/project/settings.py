@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "xz%6v2jj$ln(bnvvjc=vd(kc5j60e$)4%6h6=7p!e+9%_+2evq"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "xz%6v2jj$ln(bnvvjc=vd(kc5j60e$)4%6h6=7p!e+9%_+2evq"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -40,7 +43,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "core.structures.store",
-    "django_extensions"
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -72,18 +75,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "project.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -122,6 +113,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = "/static/"
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
+
+# Media storage
+MEDIA_ROOT = os.path.join(BASE_DIR, "upload")
+STATICFILES_DIRS = [
+    # os.path.join(BASE_DIR, "static"),
+    ("upload", MEDIA_ROOT),
+]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -140,9 +144,43 @@ REST_FRAMEWORK = {
         "rest_framework.renderers.BrowsableAPIRenderer",
     ),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.AllowAny",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
 }
 
-BASE_URL = "http://localhost:8000"
+# get from env
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("DB_NAME", "online_store_db"),
+        "USER": os.getenv("DB_USER", "fizi"),
+        "PASSWORD": os.getenv("DB_PASSWORD", ""),
+        "HOST": os.getenv("DB_HOST", "127.0.0.1"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "TEST": {"NAME": os.getenv("DB_TEST_NAME", "online_store_test_db")},
+    }
+}
+
+NO_GDAL = True
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": True,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {process:d} {thread:d} {name} {module} {funcName} {message}",
+            "style": "{",
+        }
+    },
+    "handlers": {
+        "file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": str(BASE_DIR) + "/logs/online_store.log",
+            "backupCount": 14,
+            "maxBytes": 52428800,
+            "formatter": "verbose",
+        }
+    },
+    "loggers": {"": {"handlers": ["file"], "level": "INFO"}},
+}

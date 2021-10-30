@@ -21,3 +21,7 @@ src/
 
 # log
 logs/*
+
+# sqlite database
+db.sqlite3
+.env
