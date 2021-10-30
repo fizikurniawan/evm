@@ -22,18 +22,26 @@
     ```
 8. Run Migrate
 	```bash
-	./manage.py migrate
+	export $(cat .env | xargs) && ./manage.py migrate
 	``` 
 9. Run app
 	```bash
-	./manage.py runserver
+	export $(cat .env | xargs) && ./manage.py runserver
 	``` 
-10. Open `localhost:8000/docs` to show api documentation
+10. Open `http://localhost:8000/docs` to show api documentation
 
 ## With Dokcer
-```bash
-docker-compose up
-```
+
+1. Adjust value like database settings etc at file `.env`. Example value is put on `.env.example`. You can copy and modify it
+    ```bash
+    cp .env.example .env
+    ```
+2. Running using docker compose
+    ```bash
+    docker-compose up
+    ```
+
+##
 
 ## Demo
 1. http://<demo-ip>:8000/swagger/
